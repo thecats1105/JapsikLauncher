@@ -3,11 +3,11 @@
   "version": "3.1.1",
   "productName": "Japsik Launcher",
   "description": "Modded Minecraft Launcher for Japsik",
-  "author": "Taejun Park (https://github.com/thecats1105/)",
+  "author": "Taejun Park (https://github.com/Japsik-Server/)",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/thecats1105/JapsikLauncher",
+  "homepage": "https://github.com/Japsik-Server/JapsikLauncher",
   "bugs": {
-    "url": "https://github.com/thecats1105/JapsikLauncher/issues"
+    "url": "https://github.com/Japsik-Server/JapsikLauncher/issues"
   },
   "private": true,
   "main": "index.js",
@@ -46,6 +46,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thecats1105/JapsikLauncher.git"
+    "url": "git+https://github.com/Japsik-Server/JapsikLauncher.git"
   }
 }
