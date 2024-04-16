@@ -1,9 +1,9 @@
 {
   "name": "japsiklauncher",
-  "version": "3.2.0",
+  "version": "1.0.0-rc1",
   "productName": "Japsik Launcher",
   "description": "Modded Minecraft Launcher for Japsik",
-  "author": "Taejun Park (https://github.com/Japsik-Server/)",
+  "author": "Japsik (https://github.com/Japsik-Server/)",
   "license": "UNLICENSED",
   "homepage": "https://github.com/Japsik-Server/JapsikLauncher",
   "bugs": {

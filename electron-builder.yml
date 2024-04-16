@@ -1,6 +1,6 @@
 appId: 'japsiklauncher'
 productName: 'Japsik Launcher'
-artifactName: '${productName}-setup-${version}.${ext}'
+artifactName: 'Japsik-Launcher-setup-${version}.${ext}'
 
 copyright: 'Copyright © 2024. Japsik'
 
