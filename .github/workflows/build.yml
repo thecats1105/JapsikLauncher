@@ -79,6 +79,15 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        os: [windows-latest]
+    
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
