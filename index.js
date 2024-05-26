@@ -225,12 +225,61 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-function createWindow() {
+async function downloadIcon(url, dest) {
+    const writer = fs.createWriteStream(dest);
 
-    win = new BrowserWindow({
+    const response = await axios({
+        url,
+        method: 'GET',
+        responseType: 'stream'
+    });
+
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+    });
+}
+
+async function getPlatformIcon(filename) {
+    let ext;
+    switch (process.platform) {
+        case 'win32':
+            ext = 'ico';
+            break;
+        case 'darwin':
+        case 'linux':
+        default:
+            ext = 'png';
+            break;
+    }
+
+    const icourl = `https://static.japsik.xyz/assets/images/SealCircle.ico`;
+    const pngurl = `https://static.japsik.xyz/assets/images/SealCircle.png`;
+    const iconDir = path.join(__dirname, 'app', 'assets', 'images');
+    const iconPath = path.join(iconDir, `${filename}.${ext}`);
+    const icoPath = path.join(iconDir, `${filename}.ico`);
+    const pngPath = path.join(iconDir, `${filename}.png`);
+
+    if (!fs.existsSync(iconDir)) {
+        fs.mkdirSync(iconDir, { recursive: true });
+    }
+
+    // Always download the icon and overwrite the existing file
+    await downloadIcon(icourl, icoPath);
+    await downloadIcon(pngurl, pngPath);
+
+    return iconPath;
+}
+
+async function createWindow() {
+    const iconPath = await getPlatformIcon('SealCircle');
+
+    let win = new BrowserWindow({
         width: 1280,
         height: 720,
-        icon: getPlatformIcon('SealCircle'),
+        icon: iconPath,
         frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
@@ -238,28 +287,28 @@ function createWindow() {
             contextIsolation: false
         },
         backgroundColor: '#171614'
-    })
-    remoteMain.enable(win.webContents)
+    });
+    remoteMain.enable(win.webContents);
 
     const data = {
         bkid: Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)),
         lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders)
-    }
-    Object.entries(data).forEach(([key, val]) => ejse.data(key, val))
+    };
+    Object.entries(data).forEach(([key, val]) => ejse.data(key, val));
 
-    win.loadURL(pathToFileURL(path.join(__dirname, 'app', 'app.ejs')).toString())
+    win.loadURL(pathToFileURL(path.join(__dirname, 'app', 'app.ejs')).toString());
 
     /*win.once('ready-to-show', () => {
-        win.show()
-    })*/
+        win.show();
+    });*/
 
-    win.removeMenu()
+    win.removeMenu();
 
-    win.resizable = true
+    win.resizable = true;
 
     win.on('closed', () => {
-        win = null
-    })
+        win = null;
+    });
 }
 
 function createMenu() {
@@ -324,22 +373,6 @@ function createMenu() {
 
     }
 
-}
-
-function getPlatformIcon(filename){
-    let ext
-    switch(process.platform) {
-        case 'win32':
-            ext = 'ico'
-            break
-        case 'darwin':
-        case 'linux':
-        default:
-            ext = 'png'
-            break
-    }
-
-    return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
 app.on('ready', createWindow)
