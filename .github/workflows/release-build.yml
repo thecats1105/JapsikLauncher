@@ -1,0 +1,70 @@
+name: Build
+
+on: 
+  push:
+      branches:
+        - v1.0.x-release
+
+jobs:
+  release_draft:
+        permissions:
+            contents: write
+            pull-requests: write
+            checks: write
+        runs-on: ubuntu-latest
+        steps:
+            - uses: release-drafter/release-drafter@v5
+              id: release-drafter
+              with:
+                  config-name: 'release-drafter-config.yml'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        outputs:
+            release_id: ${{ steps.release-drafter.outputs.id }}
+
+  build:
+    runs-on: ${{ matrix.os }}
+
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        os: [windows-latest]
+    
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install Dependencies
+        run: |
+          npm ci
+          echo -e "\033[32m"Dependencies Installation Completed
+        shell: bash
+
+      - name: Build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run dist:win
+          echo -e "\033[32m"Build Completed
+        shell: bash
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.3.2
+        with:
+          name: dist
+          path: dist/**
+          if-no-files-found: warn
+          retention-days: 30
