@@ -15,6 +15,6 @@ sourceGithubLink = "https://github.com/Japsik-Server/JapsikLauncher"
 supportLink = "https://github.com/Japsik-Server/JapsikLauncher/issues"
 
 [ejs.welcome]
-welcomeHeader = "잡식서버에 오신 걸 환영합니다!"
-welcomeDescription = "서버에서 건축을 하며 도시를 만들어나가봐요!"
+welcomeHeader = "잡식에 오신 걸 환영합니다!"
+welcomeDescription = "여러 서버에서 즐겁게 마인크래프트를 플레이 해보세요!"
 welcomeDescCTA = "단 몇번의 클릭만으로 서버에 접속하실 수 있어요."
